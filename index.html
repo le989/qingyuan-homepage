@@ -1,0 +1,1707 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>清远 | 内容增长与 AI 工作流实践</title>
+  <meta name="description" content="清远的个人主页：7 年内容运营与投放经验，正在把 AI 工具接入 B2B 内容增长流程。">
+  <style>
+    :root {
+      --bg: #070c12;
+      --bg-soft: #0d141c;
+      --panel: #111a23;
+      --panel-2: #151f2a;
+      --ink: #f8fafc;
+      --text: #cbd5e1;
+      --muted: #8b98a9;
+      --line: rgba(125, 211, 199, 0.18);
+      --line-strong: rgba(125, 211, 199, 0.42);
+      --mint: #7dd3c7;
+      --mint-2: #a7f3d0;
+      --amber: #f59e0b;
+      --violet: #818cf8;
+      --radius: 18px;
+      --shadow: 0 26px 80px rgba(0, 0, 0, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 74% 8%, rgba(245, 158, 11, 0.16), transparent 25%),
+        radial-gradient(circle at 28% 34%, rgba(125, 211, 199, 0.16), transparent 24%),
+        linear-gradient(90deg, rgba(125, 211, 199, 0.055) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(125, 211, 199, 0.045) 1px, transparent 1px),
+        var(--bg);
+      background-size: auto, auto, 72px 72px, 72px 72px, auto;
+      font-family: "PingFang SC", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      background-size: 7px 7px;
+      opacity: 0.24;
+      mix-blend-mode: screen;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .site {
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(7, 12, 18, 0.72);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-inner {
+      display: flex;
+      max-width: 1180px;
+      min-height: 72px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border: 1px solid rgba(245, 158, 11, 0.48);
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fff5c7, #7dd3c7);
+      color: #17211f;
+      box-shadow: 0 0 32px rgba(125, 211, 199, 0.18);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-links a {
+      position: relative;
+      padding: 8px 12px;
+      border-radius: 999px;
+      transition: color 180ms ease, background 180ms ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--ink);
+      background: rgba(125, 211, 199, 0.1);
+    }
+
+    .status-pill,
+    .pill,
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(125, 211, 199, 0.22);
+      border-radius: 999px;
+      background: rgba(125, 211, 199, 0.08);
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      padding: 8px 14px;
+      color: var(--mint);
+      font-size: 13px;
+    }
+
+    .status-pill::before,
+    .control-title::before,
+    .float-card::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 12px rgba(125, 211, 199, 0.7);
+    }
+
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 72px);
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(420px, 0.86fr);
+      gap: clamp(40px, 7vw, 96px);
+      max-width: 1180px;
+      min-height: calc(100vh - 72px);
+      align-items: center;
+      margin: 0 auto;
+      padding: 82px 24px 70px;
+    }
+
+    .hero-bg-word {
+      position: absolute;
+      left: 4vw;
+      top: 20%;
+      color: rgba(255, 255, 255, 0.032);
+      font-size: clamp(72px, 13vw, 188px);
+      font-weight: 900;
+      line-height: 0.88;
+      letter-spacing: -0.04em;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--mint);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 14px;
+      font-size: clamp(62px, 8vw, 112px);
+      line-height: 0.95;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      text-shadow: 0 0 42px rgba(125, 211, 199, 0.12);
+    }
+
+    .hero-subtitle {
+      margin-bottom: 10px;
+      color: var(--ink);
+      font-size: clamp(24px, 2.8vw, 36px);
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-lead {
+      max-width: 680px;
+      margin-bottom: 28px;
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    .pill-row,
+    .hud-row,
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      padding: 8px 13px;
+      font-size: 13px;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .pill:hover,
+    .tag:hover {
+      transform: translateY(-2px);
+      border-color: rgba(125, 211, 199, 0.48);
+      background: rgba(125, 211, 199, 0.16);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+      margin-bottom: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 46px;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 18px;
+      border: 1px solid rgba(125, 211, 199, 0.34);
+      border-radius: 14px;
+      color: #07100f;
+      background: linear-gradient(135deg, var(--mint), var(--mint-2));
+      font-weight: 800;
+      box-shadow: 0 0 28px rgba(125, 211, 199, 0.16);
+      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 42px rgba(125, 211, 199, 0.32);
+    }
+
+    .button.secondary {
+      color: var(--amber);
+      background: rgba(245, 158, 11, 0.07);
+      border-color: rgba(245, 158, 11, 0.38);
+      box-shadow: none;
+    }
+
+    .button.secondary:hover {
+      background: rgba(245, 158, 11, 0.14);
+      box-shadow: 0 0 30px rgba(245, 158, 11, 0.18);
+    }
+
+    .hud-row {
+      margin-top: 4px;
+    }
+
+    .hud {
+      min-width: 112px;
+      padding: 8px 13px;
+      border: 1px solid rgba(125, 211, 199, 0.2);
+      border-radius: 999px;
+      background: rgba(21, 31, 42, 0.7);
+      color: var(--text);
+      font-size: 13px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      transition: transform 180ms ease, border-color 180ms ease;
+    }
+
+    .hud strong {
+      color: var(--mint);
+    }
+
+    .hud:nth-child(2) strong {
+      color: var(--amber);
+    }
+
+    .hud:nth-child(3) strong {
+      color: var(--violet);
+    }
+
+    .hud:hover {
+      transform: translateY(-3px);
+      border-color: rgba(125, 211, 199, 0.5);
+    }
+
+    .control-wrap {
+      position: relative;
+      min-height: 500px;
+    }
+
+    .control-panel {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 460px;
+      margin: 0 auto;
+      padding: 28px;
+      border: 1px solid rgba(125, 211, 199, 0.24);
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+        rgba(17, 26, 35, 0.92);
+      box-shadow: var(--shadow), 0 0 70px rgba(125, 211, 199, 0.08);
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+    }
+
+    .control-panel:hover {
+      transform: translateY(-4px);
+      border-color: rgba(125, 211, 199, 0.48);
+      box-shadow: var(--shadow), 0 0 80px rgba(125, 211, 199, 0.18);
+    }
+
+    .control-panel::before {
+      content: "";
+      position: absolute;
+      inset: 18px 18px auto;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--mint), var(--amber), var(--violet));
+    }
+
+    .control-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 20px 0 26px;
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .control-title small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .control-title span {
+      min-width: 0;
+    }
+
+    .control-list {
+      display: grid;
+      gap: 13px;
+      margin-bottom: 24px;
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 15px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.055);
+      border-radius: 14px;
+      background: rgba(9, 15, 22, 0.64);
+      color: var(--text);
+    }
+
+    .control-row span {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .control-row span::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 10px rgba(125, 211, 199, 0.65);
+    }
+
+    .control-row em {
+      color: var(--muted);
+      font-style: normal;
+    }
+
+    .system-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .system-line {
+      flex: 1;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--mint), rgba(125, 211, 199, 0.05));
+    }
+
+    .float-card {
+      position: absolute;
+      z-index: 1;
+      display: flex;
+      width: 156px;
+      min-height: 72px;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+      padding: 14px;
+      border: 1px solid rgba(125, 211, 199, 0.22);
+      border-radius: 15px;
+      background: rgba(21, 31, 42, 0.92);
+      color: var(--text);
+      font-size: 13px;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.28);
+      transition: transform 220ms ease, border-color 220ms ease;
+    }
+
+    .float-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(125, 211, 199, 0.52);
+    }
+
+    .float-card strong {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--mint);
+    }
+
+    .float-card small {
+      color: var(--muted);
+    }
+
+    .float-card.one {
+      top: 18px;
+      right: -24px;
+    }
+
+    .float-card.two {
+      top: 152px;
+      right: -56px;
+    }
+
+    .float-card.three {
+      right: -38px;
+      bottom: 96px;
+    }
+
+    .float-card.four {
+      right: -60px;
+      bottom: 16px;
+    }
+
+    .section {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .hero-content,
+    .control-wrap {
+      animation: rise-in 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .control-wrap {
+      animation-delay: 120ms;
+    }
+
+    .control-panel {
+      animation: panel-float 6s ease-in-out infinite;
+    }
+
+    .float-card.one,
+    .float-card.three {
+      animation: drift-a 7s ease-in-out infinite;
+    }
+
+    .float-card.two,
+    .float-card.four {
+      animation: drift-b 8s ease-in-out infinite;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 620ms ease, transform 620ms ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: clamp(74px, 8vw, 112px) 24px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.35fr) minmax(0, 1fr);
+      gap: clamp(24px, 5vw, 72px);
+      margin-bottom: 34px;
+    }
+
+    .kicker {
+      margin: 0;
+      color: var(--mint);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      font-size: clamp(34px, 4.4vw, 62px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      max-width: 720px;
+      color: var(--text);
+      margin-bottom: 0;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card,
+    .cap-card,
+    .timeline-card,
+    .project-card,
+    .ai-card {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
+        rgba(17, 26, 35, 0.74);
+      box-shadow: 0 18px 52px rgba(0, 0, 0, 0.22);
+      transition: transform 190ms ease, border-color 190ms ease, box-shadow 190ms ease, background 190ms ease;
+    }
+
+    .stat-card:hover,
+    .cap-card:hover,
+    .timeline-card:hover,
+    .project-card:hover,
+    .ai-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(125, 211, 199, 0.42);
+      box-shadow: 0 26px 66px rgba(0, 0, 0, 0.32), 0 0 36px rgba(125, 211, 199, 0.08);
+    }
+
+    .stat-card {
+      min-height: 180px;
+      padding: 24px;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--ink);
+      font-size: clamp(34px, 4vw, 54px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .stat-card strong span {
+      color: var(--amber);
+      font-size: 0.66em;
+    }
+
+    .stat-card p {
+      margin: 0;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .stat-card small {
+      display: block;
+      margin-top: 10px;
+      color: var(--muted);
+    }
+
+    .cap-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .cap-card {
+      padding: 24px;
+    }
+
+    .cap-card.large {
+      grid-column: span 3;
+      min-height: 250px;
+    }
+
+    .cap-card.small {
+      grid-column: span 2;
+      min-height: 230px;
+    }
+
+    .cap-icon {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      margin-bottom: 18px;
+      border: 1px solid rgba(125, 211, 199, 0.28);
+      border-radius: 12px;
+      color: var(--mint);
+      background: rgba(125, 211, 199, 0.08);
+      font-weight: 900;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      color: var(--ink);
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .cap-card p,
+    .ai-card p,
+    .project-card p,
+    .timeline-card p {
+      color: var(--text);
+    }
+
+    .tag-row {
+      margin-top: 20px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 18px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 18px;
+      bottom: 18px;
+      left: 15px;
+      width: 1px;
+      background: linear-gradient(var(--mint), rgba(125, 211, 199, 0.05));
+    }
+
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 24px;
+      padding-left: 42px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      top: 20px;
+      left: 8px;
+      width: 15px;
+      height: 15px;
+      border: 3px solid var(--bg);
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 1px rgba(125, 211, 199, 0.34), 0 0 20px rgba(125, 211, 199, 0.28);
+      z-index: 1;
+    }
+
+    .time {
+      padding-top: 18px;
+      color: var(--mint);
+      font-weight: 800;
+    }
+
+    .timeline-card {
+      padding: 24px;
+    }
+
+    .timeline-title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(125, 211, 199, 0.12);
+      color: var(--mint);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .timeline-card ul {
+      display: grid;
+      gap: 8px;
+      margin: 18px 0 0;
+      padding-left: 18px;
+      color: var(--text);
+    }
+
+    .ai-grid,
+    .project-grid,
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .ai-card,
+    .project-card {
+      padding: 24px;
+    }
+
+    .project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ai-grid,
+    .tool-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .project-card {
+      min-height: 260px;
+      overflow: hidden;
+    }
+
+    .tool-card {
+      position: relative;
+      min-height: 182px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 85% 10%, rgba(245, 158, 11, 0.13), transparent 28%),
+        rgba(17, 26, 35, 0.72);
+      overflow: hidden;
+      transition: transform 190ms ease, border-color 190ms ease, box-shadow 190ms ease;
+    }
+
+    .tool-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 22px 20px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--mint), transparent);
+      opacity: 0.45;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(245, 158, 11, 0.42);
+      box-shadow: 0 24px 58px rgba(0, 0, 0, 0.28), 0 0 34px rgba(245, 158, 11, 0.08);
+    }
+
+    .tool-card strong {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--mint);
+      font-size: 14px;
+    }
+
+    .tool-card p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .education-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .project-meta {
+      display: inline-flex;
+      margin-bottom: 16px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: var(--amber);
+      background: rgba(245, 158, 11, 0.08);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .project-card dl {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0 0;
+    }
+
+    .project-card dt {
+      color: var(--mint);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .project-card dd {
+      margin: 0;
+      color: var(--text);
+    }
+
+    .contact {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.45fr);
+      gap: 18px;
+      align-items: stretch;
+      padding: clamp(28px, 5vw, 48px);
+      border: 1px solid rgba(125, 211, 199, 0.18);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(125, 211, 199, 0.18), transparent 28%),
+        rgba(17, 26, 35, 0.74);
+    }
+
+    .contact p {
+      max-width: 680px;
+      color: var(--text);
+    }
+
+    .contact-note {
+      display: grid;
+      align-content: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .wechat-card {
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+      padding: 18px;
+      border: 1px solid rgba(125, 211, 199, 0.18);
+      border-radius: 18px;
+      background: rgba(7, 12, 18, 0.54);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .wechat-card img {
+      display: block;
+      width: min(180px, 100%);
+      aspect-ratio: 1;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .wechat-card strong {
+      color: var(--ink);
+    }
+
+    .wechat-card span {
+      color: var(--mint);
+      font-weight: 800;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @keyframes rise-in {
+      from {
+        transform: translateY(24px);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes panel-float {
+      0%,
+      100% {
+        translate: 0 0;
+      }
+      50% {
+        translate: 0 -8px;
+      }
+    }
+
+    @keyframes drift-a {
+      0%,
+      100% {
+        translate: 0 0;
+      }
+      50% {
+        translate: 0 -8px;
+      }
+    }
+
+    @keyframes drift-b {
+      0%,
+      100% {
+        translate: 0 0;
+      }
+      50% {
+        translate: 0 8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px 20px;
+      }
+
+      .nav-links {
+        max-width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+
+      .status-pill {
+        display: none;
+      }
+
+      .hero-inner,
+      .section-head,
+      .timeline-item,
+      .contact {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-inner {
+        min-height: auto;
+        padding-top: 64px;
+      }
+
+      .control-wrap {
+        min-height: 470px;
+      }
+
+      .float-card.two,
+      .float-card.four {
+        right: 0;
+      }
+
+      .stats-grid,
+      .ai-grid,
+      .project-grid,
+      .tool-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .cap-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cap-card.large,
+      .cap-card.small {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .nav {
+        position: relative;
+      }
+
+      html,
+      body,
+      .site {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .nav-inner {
+        gap: 18px;
+        min-height: auto;
+        width: 100%;
+        max-width: 430px;
+        margin-left: 0;
+        margin-right: 0;
+        overflow: hidden;
+      }
+
+      .brand-mark {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+      }
+
+      .nav-links {
+        display: grid;
+        width: auto;
+        max-width: 100%;
+        align-self: stretch;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        overflow: visible;
+        font-size: 13px;
+      }
+
+      .nav-links a {
+        display: flex;
+        min-height: 38px;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 8px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.025);
+        text-align: center;
+        line-height: 1.2;
+      }
+
+      .nav-links a:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .hero-inner,
+      .inner {
+        width: 100%;
+        max-width: 430px;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 18px;
+        padding-right: 18px;
+        overflow: hidden;
+      }
+
+      .hero-inner {
+        gap: 34px;
+        padding-top: 50px;
+        padding-bottom: 54px;
+      }
+
+      .nav-inner,
+      .hero-content,
+      .control-wrap,
+      .control-panel {
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .hero-bg-word {
+        left: 18px;
+        top: 20%;
+        font-size: 64px;
+        opacity: 0.72;
+      }
+
+      .eyebrow {
+        margin-bottom: 14px;
+        font-size: 12px;
+        letter-spacing: 0.13em;
+      }
+
+      h1 {
+        margin-bottom: 10px;
+        font-size: 56px;
+        line-height: 0.98;
+      }
+
+      .hero-subtitle {
+        margin-bottom: 12px;
+        font-size: 23px;
+        line-height: 1.22;
+      }
+
+      .hero-lead {
+        max-width: 100%;
+        margin-bottom: 24px;
+        font-size: 15px;
+        line-height: 1.86;
+        overflow-wrap: anywhere;
+      }
+
+      .pill-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+        max-width: 100%;
+      }
+
+      .pill {
+        min-width: 0;
+        justify-content: center;
+        padding: 8px 9px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        text-align: center;
+      }
+
+      .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 28px;
+        margin-bottom: 20px;
+        max-width: 100%;
+      }
+
+      .button {
+        min-width: 0;
+        min-height: 48px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      .hud-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        max-width: 100%;
+      }
+
+      .hud {
+        min-width: 0;
+        padding: 9px 10px;
+        text-align: center;
+        white-space: normal;
+      }
+
+      .control-title {
+        align-items: flex-start;
+        margin-bottom: 20px;
+      }
+
+      .control-title small {
+        font-size: 12px;
+      }
+
+      .control-list {
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+
+      .control-row {
+        min-height: 54px;
+        padding: 13px 14px;
+      }
+
+      .system-bar {
+        gap: 10px;
+        font-size: 12px;
+      }
+
+      .stats-grid,
+      .ai-grid,
+      .project-grid,
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+
+      .inner {
+        padding-top: 68px;
+        padding-bottom: 68px;
+      }
+
+      h2 {
+        font-size: 34px;
+      }
+
+      .stat-card,
+      .cap-card,
+      .timeline-card,
+      .project-card,
+      .ai-card,
+      .tool-card {
+        border-radius: 16px;
+      }
+
+      .control-wrap {
+        min-height: auto;
+      }
+
+      .control-panel {
+        padding: 22px;
+        border-radius: 18px;
+        overflow: hidden;
+      }
+
+      .control-row em {
+        display: none;
+      }
+
+      .control-title small {
+        line-height: 1.6;
+        white-space: normal;
+      }
+
+      .float-card {
+        display: none;
+      }
+
+      .timeline::before {
+        left: 10px;
+      }
+
+      .timeline-item {
+        gap: 8px;
+        padding-left: 28px;
+      }
+
+      .timeline-item::before {
+        left: 3px;
+      }
+
+      .time {
+        padding-top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="site">
+    <nav class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="#">
+          <span class="brand-mark">清</span>
+          <span>清远</span>
+        </a>
+        <div class="nav-links" aria-label="主导航">
+          <a href="#about">关于我</a>
+          <a href="#stats">数据亮点</a>
+          <a href="#capabilities">核心能力</a>
+          <a href="#experience">工作经历</a>
+          <a href="#projects">项目经历</a>
+          <a href="#tools">工具教育</a>
+          <a href="#contact">联系方式</a>
+        </div>
+        <span class="status-pill">开放交流：内容增长 / AI 工作流 / B2B 内容</span>
+      </div>
+    </nav>
+
+    <main>
+      <section id="about" class="hero">
+        <div class="hero-inner">
+          <div class="hero-bg-word" aria-hidden="true">
+            内容增长<br>AI 工作流
+          </div>
+
+          <div class="hero-content">
+            <p class="eyebrow">内容运营 · 投放增长 · AI 工作流</p>
+            <h1>清远</h1>
+            <p class="hero-subtitle">用内容、投放和 AI 工作流放大业务增长</p>
+            <p class="hero-lead">7 年内容运营与投放经验，熟悉从选题、素材、投放到复盘的完整链路。现在正在把 AI 工具接入 B2B 内容生产，把复杂产品资料转化为更容易被搜索、平台和用户理解的内容资产。</p>
+
+            <div class="pill-row">
+              <span class="pill">新媒体运营</span>
+              <span class="pill">投放运营</span>
+              <span class="pill">SEO 内容</span>
+              <span class="pill">B2B 内容</span>
+              <span class="pill">AI 内容生产</span>
+              <span class="pill">知识库搭建</span>
+            </div>
+
+            <div class="hero-actions">
+              <a class="button" href="#stats">查看关键成果</a>
+              <a class="button secondary" href="#ai">了解 AI 工作流</a>
+            </div>
+
+            <div class="hud-row" aria-label="关键数据">
+              <span class="hud"><strong>7年</strong>经验</span>
+              <span class="hud"><strong>1000万+</strong>投放体量</span>
+              <span class="hud"><strong>25+</strong>服务客户</span>
+              <span class="hud"><strong>15人</strong>团队管理</span>
+            </div>
+          </div>
+
+          <div class="control-wrap" aria-label="AI 内容增长系统视觉模块">
+            <div class="control-panel">
+              <div class="control-title">
+                <span>
+                  内容增长工作台
+                  <small>选题 → 内容 → 投放 → 复盘 → AI 提效</small>
+                </span>
+              </div>
+              <div class="control-list">
+                <div class="control-row"><span>内容运营</span><em>选题与分发</em></div>
+                <div class="control-row"><span>投放增长</span><em>素材与 ROI</em></div>
+                <div class="control-row"><span>搜索优化</span><em>SEO / GEO</em></div>
+                <div class="control-row"><span>AI 工作流</span><em>提效与复用</em></div>
+              </div>
+              <div class="system-bar">
+                <span>持续迭代中</span>
+                <span class="system-line"></span>
+                <span>增长实验室</span>
+              </div>
+            </div>
+            <div class="float-card one"><strong>内容运营</strong><small>选题、策划、分发</small></div>
+            <div class="float-card two"><strong>投放增长</strong><small>千川与巨量引擎</small></div>
+            <div class="float-card three"><strong>搜索优化</strong><small>SEO / GEO 内容</small></div>
+            <div class="float-card four"><strong>AI 工作流</strong><small>辅助内容生产</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="stats" class="section">
+        <div class="inner">
+          <div class="section-head reveal">
+            <p class="kicker">数据亮点</p>
+            <div>
+              <h2>关键成果</h2>
+              <p>把内容判断、投放经验和团队协作落到可复盘的数据里，既关注曝光，也关注线索、转化和长期内容资产。</p>
+            </div>
+          </div>
+          <div class="stats-grid reveal">
+            <article class="stat-card">
+              <strong>7<span>年</span></strong>
+              <p>内容运营与投放经验</p>
+              <small>覆盖新媒体、短视频、信息流投放和 B2B 内容增长。</small>
+            </article>
+            <article class="stat-card">
+              <strong>1000<span>万+</span></strong>
+              <p>月度投放体量</p>
+              <small>参与 / 操盘过千万级月度投放项目，关注预算效率和转化质量。</small>
+            </article>
+            <article class="stat-card">
+              <strong>25<span>+</span></strong>
+              <p>服务行业客户</p>
+              <small>覆盖快消、零售、女装、互联网等多类型业务场景。</small>
+            </article>
+            <article class="stat-card">
+              <strong>15<span>人</span></strong>
+              <p>团队管理经验</p>
+              <small>拆解月度目标，跟进执行过程并组织复盘。</small>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="capabilities" class="section">
+        <div class="inner">
+          <div class="section-head reveal">
+            <p class="kicker">核心能力</p>
+            <div>
+              <h2>内容增长能力栈</h2>
+              <p>能力不是孤立技能点，而是一条从用户洞察、内容生产、投放测试到复盘优化的增长链路。</p>
+            </div>
+          </div>
+          <div class="cap-grid reveal">
+            <article class="cap-card large">
+              <span class="cap-icon">策</span>
+              <h3>新媒体运营</h3>
+              <p>聚焦抖音、小红书等内容场景，能完成账号定位、选题规划、视频图文内容生产、素材拍摄协同和数据复盘。</p>
+              <div class="tag-row">
+                <span class="tag">抖音</span><span class="tag">小红书</span><span class="tag">视频图文</span><span class="tag">素材拍摄</span><span class="tag">内容复盘</span>
+              </div>
+            </article>
+            <article class="cap-card large">
+              <span class="cap-icon">投</span>
+              <h3>投放运营</h3>
+              <p>熟悉账户搭建、素材测试、预算控制、ROI 优化和线索转化跟进，能把投放结果反哺内容方向。</p>
+              <div class="tag-row">
+                <span class="tag">千川投放</span><span class="tag">巨量引擎</span><span class="tag">素材测试</span><span class="tag">ROI 优化</span>
+              </div>
+            </article>
+            <article class="cap-card small">
+              <span class="cap-icon">搜</span>
+              <h3>内容 SEO</h3>
+              <p>围绕关键词、标题、FAQ 和内容结构做规划，让内容更容易被搜索引擎和目标用户找到。</p>
+              <div class="tag-row">
+                <span class="tag">关键词</span><span class="tag">SEO 文章</span><span class="tag">FAQ</span>
+              </div>
+            </article>
+            <article class="cap-card small">
+              <span class="cap-icon">B2B</span>
+              <h3>B2B 内容运营</h3>
+              <p>面向工业品和复杂产品场景，将产品参数、应用场景、选型逻辑和客户痛点沉淀为可检索、可转化、可复用的内容资产。</p>
+              <div class="tag-row">
+                <span class="tag">工业品内容</span><span class="tag">选型逻辑</span><span class="tag">场景转化</span><span class="tag">内容资产</span>
+              </div>
+            </article>
+            <article class="cap-card small">
+              <span class="cap-icon">AI</span>
+              <h3>AI 内容生产</h3>
+              <p>将 AI 纳入内容生产流程，用于资料拆解、结构化初稿、FAQ 扩展和多平台文案适配，并通过人工校验保证专业度与可信度。</p>
+              <div class="tag-row">
+                <span class="tag">结构化初稿</span><span class="tag">FAQ 扩展</span><span class="tag">人工校验</span><span class="tag">内容适配</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="experience" class="section">
+        <div class="inner">
+          <div class="section-head reveal">
+            <p class="kicker">工作经历</p>
+            <div>
+              <h2>经历脉络</h2>
+              <p>职业路径从内容制作出发，逐步延伸到平台运营、信息流投放、团队管理和 AI 辅助内容建设。</p>
+            </div>
+          </div>
+          <div class="timeline reveal">
+            <div class="timeline-item">
+              <div class="time">当前阶段</div>
+              <article class="timeline-card">
+                <div class="timeline-title">
+                  <h3>新媒体运营 / 品牌站 SEO / GEO 内容</h3>
+                  <span class="badge">当前</span>
+                </div>
+                <p>某工业传感器企业</p>
+                <ul>
+                  <li>负责日常新媒体内容运营，围绕产品应用、选型问题和客户痛点规划短视频、图文与平台内容。</li>
+                  <li>参与品牌站内容建设和必应 SEO 优化，整理关键词、规划文章结构，并配合页面发布与收录跟进。</li>
+                  <li>参与 GEO 内容梳理，围绕问题型、场景型、参数型内容建设可被 AI 搜索理解的结构化资料。</li>
+                </ul>
+              </article>
+            </div>
+            <div class="timeline-item">
+              <div class="time">上一阶段</div>
+              <article class="timeline-card">
+                <h3>运营经理 / 主管</h3>
+                <p>某内容传媒公司</p>
+                <ul>
+                  <li>统筹抖音、小红书双平台内容运营，推进从内容引流到用户沉淀的转化流程。</li>
+                  <li>负责账号定位、内容选题、短视频脚本、拍摄剪辑、发布节奏和数据复盘。</li>
+                  <li>根据用户反馈和转化数据，持续优化内容方向、产品卖点和转化话术。</li>
+                </ul>
+              </article>
+            </div>
+            <div class="timeline-item">
+              <div class="time">增长投放阶段</div>
+              <article class="timeline-card">
+                <h3>运营经理 / 主管</h3>
+                <p>某信息流投放服务公司</p>
+                <ul>
+                  <li>负责客户千川投放策略制定、账户管理、项目服务和团队管理，服务客户 25+。</li>
+                  <li>根据业务目标和产品卖点，制定账户结构、素材测试、预算分配和 ROI 测算方案。</li>
+                  <li>参与 / 操盘过 1000 万+ 月度投放体量；管理 15 人运营 / 投放团队。</li>
+                </ul>
+              </article>
+            </div>
+            <div class="timeline-item">
+              <div class="time">内容制作阶段</div>
+              <article class="timeline-card">
+                <h3>导演 / 编导</h3>
+                <p>某地方电视媒体机构</p>
+                <ul>
+                  <li>负责节目选题策划、分镜脚本、拍摄执行、现场调度和后期制作。</li>
+                  <li>参与儿童剧、纪实类节目及栏目内容制作。</li>
+                  <li>积累视频内容策划、拍摄执行和后期制作经验。</li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="ai" class="section">
+        <div class="inner">
+          <div class="section-head reveal">
+            <p class="kicker">AI 转型</p>
+            <div>
+              <h2>从内容运营到 AI 内容工作流</h2>
+              <p>当前定位是 AI 工具实践者、AI 内容生产实践者和 AI 编程学习者。重点不是追概念，而是把 AI 用在真实的内容生产、资料整理和搜索优化里。</p>
+            </div>
+          </div>
+          <div class="ai-grid reveal">
+            <article class="ai-card">
+              <span class="cap-icon">产</span>
+              <h3>AI 内容生产实践</h3>
+              <p>把 AI 用在资料拆解、文章初稿、平台文案和 FAQ 扩写中，提升内容产能，同时保留人工校验和业务判断。</p>
+            </article>
+            <article class="ai-card">
+              <span class="cap-icon">GEO</span>
+              <h3>GEO / AI 搜索优化</h3>
+              <p>围绕问题型、场景型、参数型和选型型内容，规划更容易被 AI 搜索识别、理解和引用的结构。</p>
+            </article>
+            <article class="ai-card">
+              <span class="cap-icon">搜</span>
+              <h3>品牌站 SEO 实践</h3>
+              <p>围绕品牌站和产品站内容，做关键词分层、标题规划、文章结构设计和必应 SEO 收录配合。</p>
+            </article>
+            <article class="ai-card">
+              <span class="cap-icon">库</span>
+              <h3>产品知识库搭建</h3>
+              <p>用 Obsidian 等工具整理产品线、型号、参数、FAQ 和选型规则，让内容生产有稳定资料底座。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" class="section">
+        <div class="inner">
+          <div class="section-head reveal">
+            <p class="kicker">项目经历</p>
+            <div>
+              <h2>项目实践</h2>
+              <p>这些项目更像一套正在形成的内容基础设施：先整理资料，再生产内容，最后进入搜索、平台和销售场景。</p>
+            </div>
+          </div>
+          <div class="project-grid reveal">
+            <article class="project-card">
+              <span class="project-meta">进行中</span>
+              <h3>工业品关键词体系与 SEO 内容建设</h3>
+              <dl>
+                <dt>解决的问题</dt>
+                <dd>为产品词、型号词、应用场景词、选型词和 FAQ 词建立分层内容体系，提升内容规划效率。</dd>
+                <dt>我的职责</dt>
+                <dd>负责关键词整理、标题规划、文章结构设计、AI 辅助初稿、人工审核、内容发布与分发。</dd>
+              </dl>
+              <div class="tag-row"><span class="tag">关键词体系</span><span class="tag">SEO 内容</span><span class="tag">文章结构</span><span class="tag">内容分发</span></div>
+            </article>
+            <article class="project-card">
+              <span class="project-meta">进行中</span>
+              <h3>GEO 内容与 AI 搜索收录优化</h3>
+              <dl>
+                <dt>解决的问题</dt>
+                <dd>让产品内容从普通文章升级为更容易被 AI 搜索理解、抽取和引用的结构化资料。</dd>
+                <dt>我的职责</dt>
+                <dd>围绕问题型、场景型、参数型和选型型内容，规划问答结构、场景说明和判断逻辑。</dd>
+              </dl>
+              <div class="tag-row"><span class="tag">GEO</span><span class="tag">AI 搜索</span><span class="tag">问答结构</span><span class="tag">场景内容</span></div>
+            </article>
+            <article class="project-card">
+              <span class="project-meta">进行中</span>
+              <h3>产品知识库搭建</h3>
+              <dl>
+                <dt>解决的问题</dt>
+                <dd>把分散的产品资料、型号参数、FAQ 和选型规则统一沉淀，减少重复查找和重复生产。</dd>
+                <dt>我的职责</dt>
+                <dd>搭建产品线索引、型号索引、参数资料、FAQ 入口和内容选题库，形成可持续维护的资料结构。</dd>
+              </dl>
+              <div class="tag-row"><span class="tag">Obsidian</span><span class="tag">产品资料</span><span class="tag">知识库</span><span class="tag">内容资产</span></div>
+            </article>
+            <article class="project-card">
+              <span class="project-meta">建设中</span>
+              <h3>新产品站内容建设与收录配合</h3>
+              <dl>
+                <dt>解决的问题</dt>
+                <dd>补齐产品站内容深度，提升产品介绍、应用场景、常见问题和相关文章模块的完整度。</dd>
+                <dt>我的职责</dt>
+                <dd>负责关键词整理、标题规划、AI 辅助文章生成、页面内容维护和必应 SEO 收录资料准备。</dd>
+              </dl>
+              <div class="tag-row"><span class="tag">产品站</span><span class="tag">品牌站 SEO</span><span class="tag">内容建设</span><span class="tag">收录跟进</span></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="tools" class="section">
+        <div class="inner">
+          <div class="section-head reveal">
+            <p class="kicker">工具与教育</p>
+            <div>
+              <h2>执行工具箱</h2>
+              <p>工具不是展示清单，而是服务于一个目标：更快地把信息整理成内容，把内容沉淀成可复用资产。</p>
+            </div>
+          </div>
+          <div class="tool-grid reveal">
+            <article class="tool-card">
+              <strong>短视频与素材生产</strong>
+              <p>剪映、Premiere、Photoshop，用于素材拍摄协同、短视频剪辑、图文处理和内容视觉包装。</p>
+            </article>
+            <article class="tool-card">
+              <strong>协作与项目推进</strong>
+              <p>飞书用于需求同步、项目跟进、任务拆解和复盘记录，让内容生产过程更可追踪。</p>
+            </article>
+            <article class="tool-card">
+              <strong>知识库与内容资产</strong>
+              <p>Obsidian 用于沉淀产品资料、关键词体系、FAQ、选型规则和可复用内容模块。</p>
+            </article>
+            <article class="tool-card">
+              <strong>AI 与网站内容发布</strong>
+              <p>AI 写作工具和基础网站后台，用于初稿生成、人工改写、页面发布、收录准备和内容维护。</p>
+            </article>
+          </div>
+          <div class="education-line reveal">
+            <span class="pill">某本科院校</span>
+            <span class="pill">本科</span>
+            <span class="pill">播音与主持艺术</span>
+            <span class="pill">本科阶段</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="section">
+        <div class="inner">
+          <div class="contact reveal">
+            <div>
+              <p class="kicker">联系方式</p>
+              <h2>欢迎交流</h2>
+              <p>如果你关注 AI 内容生产、B2B 内容运营或投放增长，可以通过微信联系。适合交流合作机会、岗位机会或内容项目。</p>
+            </div>
+            <div class="contact-note">
+              <span class="status-pill">在职，可沟通</span>
+              <span>方向：AI 内容生产 / B2B 内容运营 / 投放增长</span>
+              <div class="wechat-card">
+                <img src="assets/wechat-qr.png" alt="微信二维码">
+                <strong>微信联系</strong>
+                <span>zzzzzz_957</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      © 2026 清远 · 内容增长 · AI 工具实践 · B2B 内容运营
+    </footer>
+  </div>
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
+  </script>
+</body>
+</html>
